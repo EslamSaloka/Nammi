@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Requests\Dashboard\Feedbacks;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+
+class CreateRequest extends FormRequest
+{
+
+    public function attributes() {
+        $lang = [
+            'name',
+            'content',
+        ];
+        $return = [
+            'star',
+        ];
+        foreach(config('laravellocalization.supportedLocales') as $key=>$value) {
+            foreach($lang as $V) {
+                $return[$key.".".$V] = __($key.".".$V);
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules() {
+        $lang = [
+           'name'       => 'required|string|max:150',
+           'content'    => 'required',
+        ];
+        $rules = [
+            'star'  => 'required|numeric',
+        ];
+        foreach(config('laravellocalization.supportedLocales') as $key=>$value) {
+            foreach($lang as $K=>$V) {
+                $rules[$key.".".$K] = $V;
+            }
+        }
+        return $rules;
+    }
+}
